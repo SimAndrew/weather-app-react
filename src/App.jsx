@@ -1,5 +1,36 @@
 import './App.css';
+import React from 'react';
 
-export default function App() {
-	return <h1>React</h1>;
+class App extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = { location: 'Madrid' };
+		this.fetchWeather = this.fetchWeather.bind(this);
+	}
+
+	fetchWeather() {
+		console.log('Loading data...');
+		console.log(this);
+	}
+
+	render() {
+		return (
+			<div className="app">
+				<h1>Weather App</h1>
+				<div>
+					<input
+						type="text"
+						placeholder="Search for location..."
+						value={this.state.location}
+						onChange={(e) => this.setState({ location: e.target.value })}
+					/>
+				</div>
+				<button className="input" onClick={this.fetchWeather}>
+					Get weather
+				</button>
+			</div>
+		);
+	}
 }
+
+export default App;

@@ -4,15 +4,15 @@ import React from 'react';
 function getWeatherIcon(wmoCode) {
 	const icons = new Map([
 		[[0], '☀️'],
-		[[1], '🌤'],
-		[[2], '⛅️'],
+		[[1], '🌤️'],
+		[[2], '⛅'],
 		[[3], '☁️'],
-		[[45, 48], '🌫'],
-		[[51, 56, 61, 66, 80], '🌦'],
-		[[53, 55, 63, 65, 57, 67, 81, 82], '🌧'],
-		[[71, 73, 75, 77, 85, 86], '🌨'],
-		[[95], '🌩'],
-		[[96, 99], '⛈'],
+		[[45, 48], '🌫️'],
+		[[51, 56, 61, 66, 80], '🌦️'],
+		[[53, 55, 63, 65, 57, 67, 81, 82], '🌧️'],
+		[[71, 73, 75, 77, 85, 86], '🌨️'],
+		[[95], '🌩️'],
+		[[96, 99], '⛈️'],
 	]);
 	const arr = [...icons.keys()].find((key) => key.includes(wmoCode));
 	if (!arr) return 'NOT FOUND';
@@ -97,9 +97,62 @@ class App extends React.Component {
 				</button>
 
 				{this.setState.isLoading && <p className="loader">Loading...</p>}
+
+				{this.state.weather.weathercode && (
+					<Weather
+						weather={this.state.weather}
+						location={this.state.displayLocation}
+					/>
+				)}
 			</div>
 		);
 	}
 }
 
 export default App;
+
+class Weather extends React.Component {
+	render() {
+		const {
+			temperature_2m_max: maxTemp,
+			temperature_2m_min: minTemp,
+			time: dates,
+			weathercode: codes,
+		} = this.props.weather;
+
+		return (
+			<div>
+				<h2>Weather {this.props.location}</h2>
+				<ul className="weather">
+					{dates.map((date, i) => (
+						<Day
+							date={date}
+							maxTemp={maxTemp.at(i)}
+							minTemp={minTemp.at(i)}
+							code={codes.at(i)}
+							key={date}
+							isToday={i === 0}
+						/>
+					))}
+				</ul>
+			</div>
+		);
+	}
+}
+
+class Day extends React.Component {
+	render() {
+		const { date, maxTemp, minTemp, code, isToday } = this.props;
+
+		return (
+			<li className="day">
+				<span>{getWeatherIcon(code)}</span>
+				<p>{isToday ? 'Today' : formatDay(date)}</p>
+				<p>
+					{Math.floor(minTemp)}&deg; &mdash;{' '}
+					<strong>{Math.ceil(maxTemp)}&deg;</strong>
+				</p>
+			</li>
+		);
+	}
+}

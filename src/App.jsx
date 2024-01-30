@@ -34,18 +34,14 @@ function formatDay(dateStr) {
 }
 
 class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			location: '',
-			isLoading: false,
-			displayLocation: '',
-			weather: {},
-		};
-		this.fetchWeather = this.fetchWeather.bind(this);
-	}
+	state = {
+		location: '',
+		isLoading: false,
+		displayLocation: '',
+		weather: {},
+	};
 
-	async fetchWeather() {
+	fetchWeather = async () => {
 		try {
 			this.setState({ isLoading: true });
 
@@ -78,20 +74,18 @@ class App extends React.Component {
 		} finally {
 			this.setState({ isLoading: false });
 		}
-	}
+	};
+
+	setLocation = (e) => this.setState({ location: e.target.value });
 
 	render() {
 		return (
 			<div className="app">
 				<h1>Weather App</h1>
-				<div>
-					<input
-						type="text"
-						placeholder="Search for location..."
-						value={this.state.location}
-						onChange={(e) => this.setState({ location: e.target.value })}
-					/>
-				</div>
+				<Input
+					location={this.state.location}
+					onChangeLocation={this.setLocation}
+				/>
 				<button className="button" onClick={this.fetchWeather}>
 					Get weather
 				</button>
@@ -110,6 +104,19 @@ class App extends React.Component {
 }
 
 export default App;
+
+class Input extends React.Component {
+	render() {
+		return (
+			<input
+				type="text"
+				placeholder="Search for location..."
+				value={this.props.location}
+				onChange={this.props.onChangeLocation}
+			/>
+		);
+	}
+}
 
 class Weather extends React.Component {
 	render() {
